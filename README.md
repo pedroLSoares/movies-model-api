@@ -113,9 +113,15 @@ Exploratory work (see also `data_analysis.ipynb`) informed how we shaped the tra
 
 ---
 
-## Model and feature engineering
+## Model and Feature Engineering
 
-The default estimator in the refined flow (notebook / model **v1.1.0**) is **`HistGradientBoostingRegressor`**, chosen for robustness and dense data after preprocessing.
+The default estimator in the refined flow (model **v1.1.0**) is **`HistGradientBoostingRegressor`**. The choice was based on the following factors:
+
+*   **Speed and Efficiency:** It is significantly faster than other tree-based models, allowing for faster training cycles even with large datasets.
+*   **Realistic Validation:** It provides a more grounded and realistic validation of movie ratings, avoiding common pitfalls like over-prediction or extreme bias.
+*   **Handling of String and Text Features:** The primary goal was to effectively manage string and text-based features without the need for the massive, complex transformations that other model types (such as Neural Networks or SVMs) would require.
+
+
 
 ### Feature rationale
 
