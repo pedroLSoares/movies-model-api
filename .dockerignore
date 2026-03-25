@@ -1,0 +1,14 @@
+.venv
+__pycache__
+.git
+.gitignore
+.cursor
+*.ipynb
+.pytest_cache
+.mypy_cache
+htmlcov
+mlruns
+data
+data_parsed
+scripts
+.env

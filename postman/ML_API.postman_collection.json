@@ -1,0 +1,109 @@
+{
+  "info": {
+    "name": "ML API — Movies predictor",
+    "description": "FastAPI: listagem de artefatos, métricas por versão, treino e predição.\n\nVariável de coleção `baseUrl` (default `http://127.0.0.1:8000`). Documentação OpenAPI: `{{baseUrl}}/docs`.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "modelVersion",
+      "value": "1.0.0"
+    }
+  ],
+  "item": [
+    {
+      "name": "List artifacts",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/list",
+        "description": "Lista versões de modelos e datasets registados em `app/artifacts`."
+      }
+    },
+    {
+      "name": "Model metrics",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/metrics/{{modelVersion}}",
+        "description": "Métricas de treino e metadados do modelo `metadata.json` para a versão indicada."
+      }
+    },
+    {
+      "name": "Train",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"dataset_version\": \"1.0.0\",\n  \"estimator\": \"hist_gradient_boosting\",\n  \"hyperparams\": {}\n}"
+        },
+        "url": "{{baseUrl}}/train",
+        "description": "`dataset_version` opcional (omite para usar o dataset mais recente). `hyperparams` são chaves aceites pelo estimador (ex.: `hgb__learning_rate`)."
+      }
+    },
+    {
+      "name": "Train (latest dataset)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"estimator\": \"hist_gradient_boosting\",\n  \"hyperparams\": {}\n}"
+        },
+        "url": "{{baseUrl}}/train",
+        "description": "Treino sem `dataset_version` — usa o último dataset semver disponível."
+      }
+    },
+    {
+      "name": "Predict",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"features\": {\n    \"runtime\": 120.0,\n    \"budget\": 100000000,\n    \"release_month\": 7,\n    \"director\": \"Christopher Nolan\",\n    \"cast\": [\"Tom Hanks\", \"Julia Roberts\"]\n  },\n  \"model_version\": \"1.0.0\"\n}"
+        },
+        "url": "{{baseUrl}}/predict",
+        "description": "`model_version` opcional (omite para usar o modelo mais recente). `cast` é lista de nomes."
+      }
+    },
+    {
+      "name": "Predict (latest model)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"features\": {\n    \"runtime\": 120.0,\n    \"budget\": 100000000,\n    \"release_month\": 7,\n    \"director\": \"Christopher Nolan\",\n    \"cast\": [\"Tom Hanks\", \"Julia Roberts\"]\n  }\n}"
+        },
+        "url": "{{baseUrl}}/predict",
+        "description": "Inferência com o modelo semver mais recente."
+      }
+    }
+  ]
+}

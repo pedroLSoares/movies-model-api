@@ -1,0 +1,7 @@
+artifacts/
+mlruns/
+__pycache__/
+*.py[cod]
+.Python
+.venv/
+data

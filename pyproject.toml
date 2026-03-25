@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "ml-movies-challenge"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+packages = [{ include = "app" }]
+
+[tool.poetry.dependencies]
+python = "^3.13"
+# MLflow (<4) requer pandas<3; manter 2.x até o ecossistema alinhar.
+pandas = "^2.2.3"
+seaborn = "^0.13.2"
+matplotlib = "^3.10.8"
+scikit-learn = "^1.8.0"
+fastapi = "^0.115.0"
+uvicorn = { extras = ["standard"], version = "^0.34.0" }
+joblib = "^1.4.2"
+mlflow = "^3.0.0"
+category-encoders = "^2.9.0"
+pyarrow = "^19.0.0"
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^7.2.0"
+
+[tool.poetry.scripts]
+ml-bootstrap = "app.bootstrap:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

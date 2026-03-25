@@ -1,0 +1,32 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      MLFLOW_TRACKING_URI: file:///app/mlruns
+      MLFLOW_EXPERIMENT_NAME: ${MLFLOW_EXPERIMENT_NAME:-ml-movies-challenge}
+      MLFLOW_ENABLED: ${MLFLOW_ENABLED:-1}
+    volumes:
+      - mlruns:/app/mlruns
+      - ./app/artifacts:/app/artifacts 
+    deploy: 
+      resources:
+        limits:
+          memory: 6G 
+        reservations:
+          memory: 6G 
+
+  mlflow-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.mlflow
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlruns:/mlflow/mlruns
+
+volumes:
+  mlruns:
