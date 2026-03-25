@@ -101,6 +101,18 @@ Available algorithms are registered in **`app/services/estimators.py`** (`ESTIMA
 
 ---
 
+## Exploratory analysis
+
+Exploratory work (see also `data_analysis.ipynb`) informed how we shaped the training data and which errors we optimized for.
+
+**Vote count and stability.** Much of the raw data is concentrated on movies with **fewer than 50 votes**. Using those rows makes the **mean rating very unstable** (high variance with little evidence). We therefore **prefer rows with more votes**: the pipeline keeps titles with **`vote_count > 50`** so averages are less volatile and more reliable for modeling.
+
+**Target and relationships.** We did **not** observe strong linear or clear relationships between individual inputs and the target: ratings **cluster heavily around ~6** on average, which limits separability. **Balancing** or stratifying the target (e.g. equal mass per bin) would have required **dropping many rows**; that was **not** pursued because the **50-vote filter had already reduced** the usable sample size.
+
+**Error metrics.** We relied mainly on **R²** and **MAE** to see how far predictions were from the true rating. The **practical goal** was to keep errors **around or below 0.5** (on the same scale as star ratings), i.e. predictions typically within half a point of the observed value.
+
+---
+
 ## Model and feature engineering
 
 The default estimator in the refined flow (notebook / model **v1.1.0**) is **`HistGradientBoostingRegressor`**, chosen for robustness and dense data after preprocessing.
