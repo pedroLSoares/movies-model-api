@@ -1,7 +1,10 @@
-artifacts/
+app/artifacts/models*
+app/artifacts/datasets/*/*.csv
+app/artifacts/datasets/*/*.parquet
 mlruns/
 __pycache__/
 *.py[cod]
 .Python
 .venv/
 data
+.vscode

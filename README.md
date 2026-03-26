@@ -156,6 +156,30 @@ Results after feature refinement and hyperparameter tuning:
 
 ---
 
+## 🔍 Model Observability & Data Drift
+
+To ensure the model remains reliable over time, this project implements **Data Drift Monitoring** using [Evidently AI](https://www.evidentlyai.com/). We monitor the consistency of incoming features compared to the training baseline to detect distributional shifts that could degrade performance.
+
+### Drift Detection Strategy
+- **Baseline (Reference):** A snapshot of the training data (`reference.parquet`) is stored alongside each model version.
+- **Current Data:** Real-time inference inputs are logged into an `inference_logs.jsonl` file.
+- **Metric:** We use the **Population Stability Index (PSI)** to measure shifts. A PSI > 0.2 indicates a significant change in data distribution, signaling a potential need for retraining.
+
+### Monitoring Endpoints
+
+The API provides two dedicated endpoints for observability:
+
+| Method | Endpoint | Description |
+|:-------|:---------|:------------|
+| `POST` | `/monitor/drift/{version}` | **Trigger Validation:** Starts a background task to compare reference vs. logged data. |
+| `GET`  | `/monitor/drift/{version}/report` | **View Report:** Returns an interactive HTML dashboard with detailed drift charts. |
+
+### How to use it:
+1. **Trigger the analysis:** Send a POST request to `/monitor/drift/1.1.0`. The server will process the logs in the background without blocking other requests.
+2. **Access the Dashboard:** Once the task is complete, open `http://localhost:8000/monitor/drift/1.1.0/report` in your browser to visualize the **PSI scores** and feature distributions.
+
+---
+
 ## Endpoints
 
 Example base URL: `http://127.0.0.1:8000` (adjust host/port as needed).

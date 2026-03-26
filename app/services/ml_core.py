@@ -10,6 +10,7 @@ import numpy as np
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 
+from app.services.data_analysis import save_reference_data, log_inference
 from app.services import estimators, registry
 from app.services.data_pipeline import (
     PREDICT_FEATURE_NAMES,
@@ -107,6 +108,8 @@ def train(
         ds_ver,
         out_dir,
     )
+
+    save_reference_data(X_train, out_dir)
     return model_version, ds_ver, metrics, mlflow_extra
 
 
@@ -138,4 +141,6 @@ def predict(
     input_data = predict_payload_to_model_frame(features)
 
     pred = model.predict(input_data)[0]
+
+    log_inference(features, v)
     return pred, v

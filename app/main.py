@@ -2,8 +2,10 @@ import logging
 import time
 from contextlib import asynccontextmanager
 from typing import Any
+from app.services.data_analysis import run_drift_validation
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi.staticfiles import StaticFiles
 
 from app.http_logging import RequestLoggingMiddleware, configure_logging
 from app.dto import (
@@ -33,6 +35,13 @@ app = FastAPI(
     version="0.1.0",
     lifespan=lifespan,
 )
+
+app.mount("/reports", StaticFiles(directory="app/artifacts/models"), name="reports")
+
+@app.post("/monitor/drift/{version}")
+async def monitor_drift(version: str, background_tasks: BackgroundTasks):
+    background_tasks.add_task(run_drift_validation, version)
+    return {"message": "Drift validation started in background"}
 
 
 @app.get("/metrics/{version}")
